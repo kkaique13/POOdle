@@ -6,16 +6,42 @@ from func import limpar
 
 if __name__ == "__main__":
     listaCarteiras = []
+    listaClientes = []
     print("Bem vindo ao POOdle Bank! \U0001F60A");
     
     while True:
-        print("(01) Cadastrar uma nova carteira \U0001F601");
-        print("(02) Listar as contas de uma carteira existente \U0001F643");
-        print("(03) Sair do programa \U0001F614 \n");
+        print("(01) Cadastrar um novo cliente")
+        print("(02) Cadastrar uma nova carteira \U0001F601");
+        print("(03) Listar as contas de uma carteira existente \U0001F643");
+        print("(04) Sair do programa \U0001F614 \n");
+    
         try:
             opcao = int(input("Informe a opção desejada \U0001F917: \n"))
             match opcao:
+                # Cadastrando o cliente
                 case 1:
+                    nom = input("Digite o nome do cliente: \n")
+                    dat = input("Digite a data de nascimento (dd/mm/aaaa): \n")
+                    end = input("Digite o endereço do cliente: \n")
+                    foj = input("Pessoa Física (PF);\nPessoa Jurídica (PJ)\n")
+                    if foj.lower() == "pf":
+                        cpf = input("Digite o CPF do cliente: \n")
+                        cli = PessoaFisica(nom, dat, end, cpf)
+                        listaClientes.append(cli)
+                        print(f"Cliente Físico {nom} criado com sucesso!")
+                    
+                    elif foj.lower() == "pj":
+                        cnpj = input("Digite o CNPJ do cliente: \n")
+                        cli = PessoaJuridica(nom, dat, end, cnpj)
+                        listaClientes.append(cli)
+                        print(f"Cliente Jurídico {nom} criado com sucesso!")
+                    
+                    else:
+                        print("Opção inválida! \U0001F621")
+                        continue
+                
+                #Cadastrando uma carteira nova (tem que mudar depois que a classe Cliente for implementada)
+                case 2:
                     inv = input("Qual o tipo de investimento? \U0001F9D0 \n")
                     car = Carteira(inv)
                     resposta = input("Deseja cadastrar uma conta?(s/n) \U0001F9D0 \n")
@@ -56,8 +82,9 @@ if __name__ == "__main__":
                     listaCarteiras.append(car)
                     limpar()
                     print(f"Cadastro da carteira {inv} realizado com sucesso! \U0001F601 \n")
-                    
-                case 2:
+                
+                # Procurando a carteira
+                case 3:
                     inv = input("Informe o investimento desejado \U0001F9D0: \n")
                     achou = False
                     for carteirinha in listaCarteiras:
@@ -72,17 +99,20 @@ if __name__ == "__main__":
                     if not achou:
                         limpar()
                         print("Não existe carteira do tipo informado! \U0001F641 \n")
-                        
-                case 3:
+                
+                # Saindo
+                case 4:
                     limpar()
                     break
                 
+                # Opção inválida
                 case _:
                     limpar()
                     print("Opção inválida! \U0001F621")
-                    
+        
+        #Opção inválida
         except ValueError:
             limpar()
             print("Opção inválida! \U0001F621")   
-                
+    
     print("Volte sempre ao POOdle Bank! \U0001F601")
