@@ -1,8 +1,8 @@
 from Cliente import Cliente
 
 class PessoaJuridica(Cliente):
-    def __init__(self, nome:str, dataNascimento:str, endereco:str, cnpj:str) -> None:
-        super().__init__(nome, dataNascimento, endereco)
+    def __init__(self, nome:str, endereco:str, cnpj:str) -> None:
+        super().__init__(nome, endereco)
         self.__cnpj = cnpj
     
     @property

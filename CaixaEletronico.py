@@ -5,166 +5,149 @@ from ContaPoupanca import ContaPoupanca
 from Carteira import Carteira
 from func import limpar
 
-if __name__ == "__main__":
+# Método para cadastrar uma conta
+def cadastrarConta(carteira: Carteira) -> None:
+    num = input("Informe o número da conta: \n").strip()
+    tit = input("\nInforme o nome do titular: \n").strip()
+
+    try:
+        sal = float(input("\nQual o valor do saldo inicial? \n"))
+        tip = input("\nConta Corrente (C);\n Conta Poupança (P):\n")
+        if tip.lower() == "c":
+            conta = ContaCorrente(num, tit, sal)
+        elif tip.lower() == "p":
+            ren = float(input("\nQual o rendimento mensal (%)? \n"))
+            conta = ContaPoupanca(num, tit, sal, ren)
+        else:
+            print("\nTipo de conta inválido!")
+            return
+        
+        carteira.addConta(conta)
+        print("\nConta cadastrada com sucesso!")
+    
+    except ValueError as erro:
+        print(f"Não foi possível cadastrar a conta: {erro}")
+
+# Método para cadastrar uma carteira
+def cadastrarCarteira(cliente=None) -> Carteira:
+    inv = input("Qual o tipo de investimento? \n")
+    carteira = Carteira(inv)
+    if cliente is not None:
+        cliente.cadastrarCarteira(carteira)
+    resposta = input("Deseja cadastrar uma conta? (s/n) \n")
+
+    while resposta.lower() == "s":
+        cadastrarConta(carteira)
+        if len(carteira.listaContas) >= 3:
+            print("Limite de contas atingido!")
+            break
+        resposta = input("Deseja cadastrar outra conta? (s/n) \n")
+    return carteira
+
+# main
+def main() -> None:
     listaCarteiras = []
     listaClientes = []
-    print("Bem vindo ao POOdle Bank! \U0001F60A");
-    
+
+    print("Bem-vindo ao POOdle Bank! 😊")
+
     while True:
-        print("(01) Cadastrar um novo cliente");
-        print("(02) Cadastrar uma nova carteira \U0001F601");
-        print("(03) Listar as contas de uma carteira existente \U0001F643");
-        print("(04) Sair do programa \U0001F614 \n");
-    
+        print("\n(01) Cadastrar um novo cliente")
+        print("(02) Cadastrar uma nova carteira")
+        print("(03) Listar as contas de uma carteira")
+        print("(04) Pesquisar um cliente")
+        print("(05) Sair do programa\n")
+
         try:
-            opcao = int(input("Informe a opção desejada \U0001F917: \n"))
+            opcao = int(input("Informe a opção desejada: \n"))
+
             match opcao:
-                # Cadastrando o cliente
+
+                # Cadastro de cliente
                 case 1:
                     nom = input("Digite o nome do cliente: \n")
-                    dat = input("Digite a data de nascimento (dd/mm/aaaa): \n")
                     end = input("Digite o endereço do cliente: \n")
-                    foj = input("Pessoa Física (PF);\nPessoa Jurídica (PJ)\n")
-                    if foj.lower() == "pf":
-                        cpf = input("Digite o CPF do cliente: \n")
-                        cli = PessoaFisica(nom, dat, end, cpf)
-                        listaClientes.append(cli)
-                        print(f"Cliente Físico {nom} criado com sucesso!")
-                        carcli = input("Deseja cadastrar uma carteira para esse cliente? (s/n) \U0001F9D0 \n")
-                        if carcli.lower() == "s":
-                            inv = input("Qual o tipo de investimento? \U0001F9D0 \n")
-                            achou = False
-                            for carteirinha in listaCarteiras:
-                                if carteirinha.investimento.lower() == inv.lower():
-                                    achou = True
-                                    limpar()
-                                    if carteirinha.listaContas == []:
-                                        print(f"Essa carteira {inv} não possui contas cadastradas! \U0001FAE4 \n")
-                                    else:
-                                        for continha in carteirinha.listaContas:
-                                            print(continha.retornaDados());
-                            if not achou:
-                                limpar()
-                                print("Não existe carteira do tipo informado! \U0001F641 \n")
-                            car = Carteira(inv)
-                            cli.cadastrarCarteira(car)
-                            listaCarteiras.append(car)
-                    elif foj.lower() == "pj":
-                        cnpj = input("Digite o CNPJ do cliente: \n")
-                        cli = PessoaJuridica(nom, dat, end, cnpj)
-                        listaClientes.append(cli)
-                        print(f"Cliente Jurídico {nom} criado com sucesso!")
-                    else:
-                        print("Opção inválida! \U0001F621")
-                        continue
-                
-                #Cadastrando uma carteira nova (tem que mudar depois que a classe Cliente for implementada)
-                case 2:
-                    inv = input("Qual o tipo de investimento? \U0001F9D0 \n")
-                    car = Carteira(inv)
-                    resposta = input("Deseja cadastrar uma conta?(s/n) \U0001F9D0 \n")
-                    
-                    while resposta.lower() == "s":
-                        num = input("Informe o número da conta \U0001F917: \n")
-                        
-                        tit = input("Informe o nome do titular \U0001F917: \n")
-                        
-                        try:
-                            sal = float(input("Qual o valor do saldo inicial? \U0001F917 \n"))
-                        except ValueError:
+                    tipo = input("Pessoa Física (PF);\nPessoa Jurídica (PJ):\n")
+
+                    try:
+                        if tipo.lower() == "pf":
+                            dat = input("Digite a data de nascimento (dd/mm/aaaa): \n")
+                            cpf = input("Digite o CPF: \n")
+                            cliente = PessoaFisica(nom, dat, end, cpf)
                             limpar()
-                            if carteirinha.listaContas == []:
-                                print(f"Essa carteira {inv} não possui contas cadastradas! \U0001FAE4 \n")
-                            else:
-                                for continha in carteirinha.listaContas:
-                                    print(continha.retornaDados());
-                    if not achou:
-                        limpar()
-                        print("Não existe carteira do tipo informado! \U0001F641 \n")
-                    
-                    elif foj.lower() == "pj":
-                        cnpj = input("Digite o CNPJ do cliente: \n")
-                        cli = PessoaJuridica(nom, dat, end, cnpj)
-                        listaClientes.append(cli)
-                        print(f"Cliente Jurídico {nom} criado com sucesso!")
-                    
-                    else:
-                        print("Opção inválida! \U0001F621")
-                        continue
-                
-                #Cadastrando uma carteira nova (tem que mudar depois que a classe Cliente for implementada)
-                case 2:
-                    inv = input("Qual o tipo de investimento? \U0001F9D0 \n")
-                    car = Carteira(inv)
-                    resposta = input("Deseja cadastrar uma conta?(s/n) \U0001F9D0 \n")
-                    
-                    while resposta.lower() == "s":
-                        num = input("Informe o número da conta \U0001F917: \n")
                         
-                        tit = input("Informe o nome do titular \U0001F917: \n")
-                        
-                        try:
-                            sal = float(input("Qual o valor do saldo inicial? \U0001F917 \n"))
-                        except ValueError:
+                        elif tipo.lower() == "pj":
+                            cnpj = input("Digite o CNPJ: \n")
+                            sociedade = input("Digite o tipo de sociedade: \n")
+                            cliente = PessoaJuridica(nom, end, cnpj, sociedade)
                             limpar()
-                            print("Saldo inicial inválido! \U0001F621 \n")
-                            continue
                         
-                        tip = input("\nConta Corrente (C);\nConta Poupança(P);\U0001F917\n")
-                        if tip.lower() == "c":
-                            car.addConta(ContaCorrente(num, tit, sal))
-                            
-                        elif tip.lower() == "p":
-                            try:
-                                ren = float(input("Qual o rendimento mensal? \U0001F917\n"))
-                            except ValueError:
-                                limpar()
-                                print("Rendimento mensal inválido! \U0001F621 \n")
-                                continue
-                            car.addConta(ContaPoupanca(num, tit, sal, ren))
                         else:
                             limpar()
-                            print("Tipo de conta inválido! \U0001F621 \n")
+                            print("Tipo de cliente inválido!")
                             continue
-                        resposta = input("Deseja cadastrar uma conta?(s/n) \U0001F9D0 \n")
-                        
-                        if resposta.lower() == "n":
-                            break
-                    
-                    listaCarteiras.append(car)
-                    limpar()
-                    print(f"Cadastro da carteira {inv} realizado com sucesso! \U0001F601 \n")
-                
-                # Procurando a carteira
-                case 3:
-                    inv = input("Informe o investimento desejado \U0001F9D0: \n")
-                    achou = False
-                    for carteirinha in listaCarteiras:
-                        if carteirinha.investimento.lower() == inv.lower():
-                            achou = True
+
+                        listaClientes.append(cliente)
+                        print("Cliente cadastrado com sucesso!")
+                        resposta = input("Deseja cadastrar uma carteira para esse cliente? (s/n) \n")
+                        if resposta.lower() == "s":
                             limpar()
-                            if carteirinha.listaContas == []:
-                                print(f"Essa carteira {inv} não possui contas cadastradas! \U0001FAE4 \n")
-                            else:
-                                for continha in carteirinha.listaContas:
-                                    print(continha.retornaDados());
-                    if not achou:
+                            carteira = cadastrarCarteira(cliente)
+                            listaCarteiras.append(carteira)
+
+                    except ValueError as erro:
+                        print(f"Erro no cadastro: {erro}")
+
+                # Cadastro de carteira
+                case 2:
+                    try:
+                        carteira = cadastrarCarteira()
+                        listaCarteiras.append(carteira)
                         limpar()
-                        print("Não existe carteira do tipo informado! \U0001F641 \n")
+                        print("Carteira cadastrada com sucesso!")
+
+                    except ValueError as erro:
+                        print(f"Erro no cadastro: {erro}")
+
+                # Listagem de contas
+                case 3:
+                    inv = input("Informe o tipo de investimento desejado: \n")
+
+                    carteirasEncontradas = [carteira for carteira in listaCarteiras if carteira.investimento.lower() == inv.lower()]
+                    if not carteirasEncontradas:
+                        print("Não existe carteira desse tipo!")
+                        continue
+
+                    for carteira in carteirasEncontradas:
+                        print(f"\nCarteira: {carteira.investimento}")
+                        if not carteira.listaContas:
+                            print("Essa carteira não possui contas!")
+                            continue
+
+                        for conta in carteira.listaContas:
+                            print(conta.retornaDados())
                 
-                # Saindo
+                # Pesquisar um cliente (Consertar)
                 case 4:
+                    cli = input("Digite o número do documento do cliente: ")
+                    for clientinho in listaClientes:
+                        for carteirinha in clientinho.listaCarteiras:
+                            for continha in carteirinha.listaContas:
+                                if cli == continha.numero:
+                                    print("Cliente encontrado!")
+                                    print(f"Cliente: {clientinho.nome}\n")
+                                    print(f"Carteiras: {clientinho.listaCarteiras}\n")
+                    print("Cliente não foi encontrado!")
+                    
+                # Saída
+                case 5:
                     limpar()
+                    print("Volte sempre ao POOdle Bank! 😊")
                     break
-                
-                # Opção inválida
                 case _:
-                    limpar()
-                    print("Opção inválida! \U0001F621")
-        
-        #Opção inválida
+                    print("Opção inválida!")
         except ValueError:
-            limpar()
-            print("Opção inválida! \U0001F621")   
-    
-    print("Volte sempre ao POOdle Bank! \U0001F601")
+            print("Informe uma opção numérica válida!")
+
+if __name__ == "__main__":
+    main()
