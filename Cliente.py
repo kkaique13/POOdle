@@ -27,5 +27,12 @@ class Cliente(ABC):
         self.__endereco = endereco
     
     @abstractmethod
+    def getDocumento(self) -> str:
+        pass
+    
     def cadastrarCarteira(self, carteira) -> None:
         self.listaCarteiras.append(carteira)
+    
+    @abstractmethod
+    def retornaDados(self) -> str:
+        pass

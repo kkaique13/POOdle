@@ -23,3 +23,6 @@ class ContaPoupanca(Conta):
     
     def acaoRendimento(self) -> None:
         self.saldo *= self.__rendimento;
+    
+    def retornaDados(self) -> str:
+        return (super().retornaDados() + f" Rendimento: {self.rendimento};\n")

@@ -78,8 +78,7 @@ def main() -> None:
                         
                         elif tipo.lower() == "pj":
                             cnpj = input("Digite o CNPJ: \n")
-                            sociedade = input("Digite o tipo de sociedade: \n")
-                            cliente = PessoaJuridica(nom, end, cnpj, sociedade)
+                            cliente = PessoaJuridica(nom, end, cnpj)
                             limpar()
                         
                         else:
@@ -127,17 +126,27 @@ def main() -> None:
                         for conta in carteira.listaContas:
                             print(conta.retornaDados())
                 
-                # Pesquisar um cliente (Consertar)
+                # Pesquisar um cliente
                 case 4:
-                    cli = input("Digite o número do documento do cliente: ")
-                    for clientinho in listaClientes:
-                        for carteirinha in clientinho.listaCarteiras:
-                            for continha in carteirinha.listaContas:
-                                if cli == continha.numero:
-                                    print("Cliente encontrado!")
-                                    print(f"Cliente: {clientinho.nome}\n")
-                                    print(f"Carteiras: {clientinho.listaCarteiras}\n")
-                    print("Cliente não foi encontrado!")
+                    doc = input("Informe o CPF/CNPJ: ").strip()
+                    encontrado = None
+                    for cliente in listaClientes:
+                        if cliente.getDocumento() == doc:
+                            encontrado = cliente
+                            break
+                    if encontrado is None:
+                        print("Cliente não encontrado!")
+                        continue
+                    print(f"Cliente: {encontrado.nome}")
+                    if not encontrado.listaCarteiras:
+                        print("Sem carteiras. Vamos cadastrar uma.")
+                        carteira = cadastrarCarteira(encontrado)
+                        listaCarteiras.append(carteira)
+                    else:
+                        for carteira in encontrado.listaCarteiras:
+                            print(f"\nCarteira: {carteira.investimento}")
+                            for conta in carteira.listaContas:
+                                print(conta.retornaDados())
                     
                 # Saída
                 case 5:

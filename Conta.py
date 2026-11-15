@@ -13,6 +13,8 @@ class Conta(ABC):
     def titular(self) -> str:
         partesNomes = self.__titular.split(" ");
         tamanho = len(partesNomes);
+        if tamanho == 1:
+            return partesNomes[0]
         return partesNomes[0] + " " + partesNomes[tamanho - 1]
     @titular.setter
     def titular(self, titular:str) -> None:

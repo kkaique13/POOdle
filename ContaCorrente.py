@@ -23,11 +23,15 @@ class ContaCorrente(Conta):
         return self.saldo + self.__limite
 
     def sacar(self, valor:float) -> None:
-        if (valor > self.saldoTotal()):
-            print("Não foi possível sacar esse valor! \U0001F641");
+        if valor > self.saldoTotal():
+            print("Não foi possível sacar esse valor! 😁")
+            return
+        if valor <= self.saldo:
+            self.saldo -= valor
         else:
-            if (valor <= self.saldo):
-                self.saldo -= valor;
-            else:
-                self.limite = (valor - self.saldo);
-                self.saldo = 0;
+            restante = valor - self.saldo
+            self.saldo = 0
+            self.__limite -= restante
+    
+    def retornaDados(self) -> str:
+        return (super().retornaDados() + f" Limite: {self.limite};\n Saldo total (saldo+limite): {self.saldoTotal()}\n")
