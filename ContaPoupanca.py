@@ -22,7 +22,7 @@ class ContaPoupanca(Conta):
             self.saldo -= valor;
     
     def acaoRendimento(self) -> None:
-        self.saldo *= self.__rendimento;
+        self.saldo *= (1 + self.__rendimento / 100);
     
     def retornaDados(self) -> str:
         return (super().retornaDados() + f" Rendimento: {self.rendimento};\n")

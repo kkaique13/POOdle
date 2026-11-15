@@ -5,7 +5,7 @@ from ContaPoupanca import ContaPoupanca
 from Carteira import Carteira
 from func import limpar
 
-# Método para cadastrar uma conta
+# Método para cadastrar uma conta em uma carteira
 def cadastrarConta(carteira: Carteira) -> None:
     num = input("Informe o número da conta: \n").strip()
     tit = input("\nInforme o nome do titular: \n").strip()
@@ -28,7 +28,7 @@ def cadastrarConta(carteira: Carteira) -> None:
     except ValueError as erro:
         print(f"Não foi possível cadastrar a conta: {erro}")
 
-# Método para cadastrar uma carteira
+# Método para cadastrar uma carteira (e opcionalmente vinculá-la a um cliente)
 def cadastrarCarteira(cliente=None) -> Carteira:
     inv = input("Qual o tipo de investimento? \n")
     carteira = Carteira(inv)
@@ -44,12 +44,12 @@ def cadastrarCarteira(cliente=None) -> Carteira:
         resposta = input("Deseja cadastrar outra conta? (s/n) \n")
     return carteira
 
-# main
+# Função principal do programa
 def main() -> None:
     listaCarteiras = []
     listaClientes = []
 
-    print("Bem-vindo ao POOdle Bank! 😊")
+    print("Bem-vindo ao POOdle Bank! \U0001f600")
 
     while True:
         print("\n(01) Cadastrar um novo cliente")
@@ -65,28 +65,28 @@ def main() -> None:
 
                 # Cadastro de cliente
                 case 1:
-                    nom = input("Digite o nome do cliente: \n")
-                    end = input("Digite o endereço do cliente: \n")
                     tipo = input("Pessoa Física (PF);\nPessoa Jurídica (PJ):\n")
 
                     try:
                         if tipo.lower() == "pf":
+                            nom = input("Digite o nome do cliente: \n")
+                            end = input("Digite o endereço do cliente: \n")
                             dat = input("Digite a data de nascimento (dd/mm/aaaa): \n")
                             cpf = input("Digite o CPF: \n")
                             cliente = PessoaFisica(nom, dat, end, cpf)
-                            limpar()
                         
                         elif tipo.lower() == "pj":
+                            nom = input("Digite o nome da empresa (termine com LTDA ou S/A): \n")
+                            end = input("Digite o endereço da empresa: \n")
                             cnpj = input("Digite o CNPJ: \n")
                             cliente = PessoaJuridica(nom, end, cnpj)
-                            limpar()
                         
                         else:
-                            limpar()
                             print("Tipo de cliente inválido!")
                             continue
 
                         listaClientes.append(cliente)
+                        limpar()
                         print("Cliente cadastrado com sucesso!")
                         resposta = input("Deseja cadastrar uma carteira para esse cliente? (s/n) \n")
                         if resposta.lower() == "s":
@@ -151,7 +151,10 @@ def main() -> None:
                 # Saída
                 case 5:
                     limpar()
-                    print("Volte sempre ao POOdle Bank! 😊")
+                    from time import sleep
+                    print("Saindo do programa...")
+                    sleep(1)
+                    print("Volte sempre ao POOdle Bank! \U0001f600")
                     break
                 case _:
                     print("Opção inválida!")
