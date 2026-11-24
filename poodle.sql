@@ -13,14 +13,14 @@ create table if not exists pessoa_fisica(
 	idCliente int not null,
 	CPF varchar(11) not null,
     constraint pk_PessoaF primary key (idCliente),
-    constraint fk_PessoaF_CLiente foreign key (idCliente) references cliente(idCliente)
+    constraint fk_PessoaF_CLiente foreign key (idCliente) references cliente(idCliente) on delete cascade
 );
 
 create table if not exists pessoa_juridica(
 	idCliente int not null,
 	CNPJ varchar(14) not null,
     constraint pk_PessoaJ primary key (idCliente),
-    constraint fk_PessoaJ_Cliente foreign key (idCliente) references cliente(idCliente)
+    constraint fk_PessoaJ_Cliente foreign key (idCliente) references cliente(idCliente)  on delete cascade
 );
 
 create table if not exists carteira(
@@ -28,7 +28,7 @@ create table if not exists carteira(
     idCliente int not null,
     investimento varchar(100) not null,
     constraint pk_Carteira primary key (idCarteira),
-    constraint fk_Carteira_Cliente foreign key (idCliente) references cliente(idCliente)
+    constraint fk_Carteira_Cliente foreign key (idCliente) references cliente(idCliente) on delete restrict
 );
 
 create table if not exists conta(
@@ -37,7 +37,7 @@ create table if not exists conta(
     saldo decimal(10, 2),
     idCarteira int not null,
     constraint pk_Conta primary key (numero),
-    constraint fk_Conta_Carteira foreign key (idCarteira) references carteira(idCarteira)
+    constraint fk_Conta_Carteira foreign key (idCarteira) references carteira(idCarteira) on delete set null
 );
 
 create table if not exists conta_corrente(
@@ -45,14 +45,14 @@ create table if not exists conta_corrente(
     limite decimal(7, 2) not null default 2000.00,
     constraint chk_Limite check (limite >= 0 and limite <= 2000),
     constraint pk_ContaCorrente primary key (numero),
-    constraint fk_ContaCorrente_Conta foreign key (numero) references conta(numero)
+    constraint fk_ContaCorrente_Conta foreign key (numero) references conta(numero) on delete cascade
 );
 
 create table if not exists conta_poupanca(
 	numero int not null,
     rendimento decimal(10, 2),
     constraint pk_ContaPoupanca primary key (numero),
-    constraint fk_ContaPoupanca_Conta foreign key (numero) references conta(numero)
+    constraint fk_ContaPoupanca_Conta foreign key (numero) references conta(numero) on delete cascade
 );
 
 insert into cliente(nome, dataNascimento, endereco) values (
